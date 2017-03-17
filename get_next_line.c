@@ -6,7 +6,7 @@
 /*   By: jinfeld <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/07 14:41:04 by jinfeld           #+#    #+#             */
-/*   Updated: 2017/03/09 13:49:21 by jinfeld          ###   ########.fr       */
+/*   Updated: 2017/03/16 19:54:08 by jinfeld          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,43 @@ int		linefill(char **line, char *save)
 	if (end != NULL)
 	{
 		end = '\0';
+		ft_strcpy(*line, save);
 	}
+}
+
+char	*bufind(t_bufd **bufd, int fd)
+{
+	t_list	*current;
+		
+	if (bufd)
+	{
+		current = *bufd;
+		while (current)
+		{
+			if (current.content_size = fd)
+				return(current);
+			current = current->next;
+		}
+		ft_lstadd(bufd, ft_lstnew(NULL, 0));
+		(*bufd)->content_size = fd;
+		return (*bufd);
+	}
+	return (NULL);
 }
 
 int		get_next_line(const int fd, char **line)
 {
-	static char *save;
-	char		buf[BUFF_SIZE + 1]
-	char		*tmp;
-	int			ret;
+	static t_list	*bufd
+	t_list			*current
+	char			buf[BUFF_SIZE + 1]
+	int				ret;
+	char			*tmp;
 	
+	current = bufind(&bufd, fd);
 	if (fd < 0)
 		return (-1);
-	if (save == NULL)
-		save = ft_strnew(0);
+	if (tmp == NULL)
+		tmp = ft_strnew(0);
 	while (!ft_strchr(save, '\n'))
 	{
 		ret = read(fd, buf, BUFF_SIZE)
@@ -42,11 +65,9 @@ int		get_next_line(const int fd, char **line)
 		if (ret == 0)
 			break ;
 		line[ret] = '\0';
-		tmp = ft_strjoin(save, buf);
-		ft_strdel(save);
-		save = tmp;
+		tmp = ft_strjoin(current.content, buf);
+		ft_strdel(&bufd.save);
+		current.content = tmp;
 	}
-	return(linefill(line, save));
-	if (close(fd) < 0)
-		return (-1);
+	return(linefill(line, bufd.save));
 }

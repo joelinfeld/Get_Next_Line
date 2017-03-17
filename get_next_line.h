@@ -6,7 +6,7 @@
 /*   By: jinfeld <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/07 14:42:00 by jinfeld           #+#    #+#             */
-/*   Updated: 2017/03/09 14:05:20 by jinfeld          ###   ########.fr       */
+/*   Updated: 2017/03/16 19:21:26 by jinfeld          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 # define BUFF_SIZE 32
 # include <stdlib.h>
 
-struct			s_bufd
+struct	s_bufd
 {
-	int			fd;
-	char 		*buffer;
+	int					fd;
+	char 				*save;
+	struct s_bufd 		*next;
 }				t_bufd;
 int get_next_line(const int fd, char **line);
