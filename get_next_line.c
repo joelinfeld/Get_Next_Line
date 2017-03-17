@@ -6,7 +6,7 @@
 /*   By: jinfeld <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/07 14:41:04 by jinfeld           #+#    #+#             */
-/*   Updated: 2017/03/16 19:54:08 by jinfeld          ###   ########.fr       */
+/*   Updated: 2017/03/16 20:08:23 by jinfeld          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ int		get_next_line(const int fd, char **line)
 			return (-1);
 		if (ret == 0)
 			break ;
-		line[ret] = '\0';
+		*line[ret] = '\0';
 		tmp = ft_strjoin(current.content, buf);
-		ft_strdel(&bufd.save);
+		ft_strdel(&current.content);
 		current.content = tmp;
 	}
-	return(linefill(line, bufd.save));
+	return(linefill(line, current.content));
 }
