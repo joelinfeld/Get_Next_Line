@@ -6,7 +6,7 @@
 /*   By: jinfeld <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/07 14:42:00 by jinfeld           #+#    #+#             */
-/*   Updated: 2017/03/16 19:21:26 by jinfeld          ###   ########.fr       */
+/*   Updated: 2017/03/21 19:07:43 by jinfeld          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,3 +22,5 @@ struct	s_bufd
 	struct s_bufd 		*next;
 }				t_bufd;
 int get_next_line(const int fd, char **line);
+
+#endif

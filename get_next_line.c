@@ -6,7 +6,7 @@
 /*   By: jinfeld <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/07 14:41:04 by jinfeld           #+#    #+#             */
-/*   Updated: 2017/03/16 20:08:23 by jinfeld          ###   ########.fr       */
+/*   Updated: 2017/03/21 19:05:56 by jinfeld          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,23 @@
 
 int		linefill(char **line, char *save)
 {
-	char	end;
+	char	*end;
 
 	end = ft_strchr(save, '\n');
 	if (end != NULL)
 	{
-		end = '\0';
+		*end = '\0';
+		end++;
+		*line = ft_strnew(ft_strlen(save));
 		ft_strcpy(*line, save);
+		save = end;
+		return(1);
 	}
+	ft_strcpy(*line, save);
+	return(0);
 }
 
-char	*bufind(t_bufd **bufd, int fd)
+t_list	*bufind(t_list **bufd, int fd)
 {
 	t_list	*current;
 		
@@ -33,7 +39,7 @@ char	*bufind(t_bufd **bufd, int fd)
 		current = *bufd;
 		while (current)
 		{
-			if (current.content_size = fd)
+			if ((int)current->content_size == fd)
 				return(current);
 			current = current->next;
 		}
@@ -46,28 +52,52 @@ char	*bufind(t_bufd **bufd, int fd)
 
 int		get_next_line(const int fd, char **line)
 {
-	static t_list	*bufd
-	t_list			*current
-	char			buf[BUFF_SIZE + 1]
+	static t_list	*bufd;
+	t_list			*current;
+	char			buf[BUFF_SIZE + 1];
 	int				ret;
 	char			*tmp;
 	
 	current = bufind(&bufd, fd);
+	tmp = NULL;
 	if (fd < 0)
 		return (-1);
 	if (tmp == NULL)
 		tmp = ft_strnew(0);
-	while (!ft_strchr(save, '\n'))
+	while (!ft_strchr(current->content, '\n'))
 	{
-		ret = read(fd, buf, BUFF_SIZE)
+		ret = read(fd, buf, BUFF_SIZE);
 		if (ret < 0)
 			return (-1);
 		if (ret == 0)
 			break ;
 		*line[ret] = '\0';
-		tmp = ft_strjoin(current.content, buf);
-		ft_strdel(&current.content);
-		current.content = tmp;
+		tmp = ft_strjoin(current->content, buf);
+		ft_strdel((char**)&current->content);
+		current->content = tmp;
 	}
-	return(linefill(line, current.content));
+	return(linefill(line, current->content));
+}
+
+void    ft_read_input(int fd)
+{
+    char    *line;
+    int        r;
+    
+    while ((r = get_next_line(fd, &line)) > 0)
+        printf("return value = %d line content : |%s|\n\n", r, line);
+    printf("return value = %d line content : |%s|\n\n", r, line);
+}
+
+int			main(int ac, char **av)
+{
+	if (ac == 2)
+	{
+		fd = open(av[1], O_RDONLY);
+		ft_read_input(fd);
+		close(fd);
+	}
+	else
+		ft_read_input(0);
+	return(0);
 }
