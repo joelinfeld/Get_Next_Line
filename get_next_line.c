@@ -11,43 +11,43 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <fcntl.h>
 
-int		linefill(char **line, char *save)
+int		linefill(char **line, char **save)
 {
 	char	*end;
 
-	end = ft_strchr(save, '\n');
+	end = ft_strchr(*save, '\n');
 	if (end != NULL)
 	{
 		*end = '\0';
 		end++;
-		*line = ft_strnew(ft_strlen(save));
-		ft_strcpy(*line, save);
-		save = end;
+		*line = ft_strnew(ft_strlen(*save));
+		ft_memmove(*line, *save, ft_strlen(*save));
+		*save = end;
 		return(1);
 	}
-	ft_strcpy(*line, save);
-	return(0);
+	*line = ft_strnew(ft_strlen(*save));
+	ft_memmove(*line, *save, ft_strlen(*save));
+	if (!ft_strlen(*line))
+		return(0);
+	else
+		return(1);
 }
 
 t_list	*bufind(t_list **bufd, int fd)
 {
 	t_list	*current;
 		
-	if (bufd)
+	current = *bufd;
+	while (current)
 	{
-		current = *bufd;
-		while (current)
-		{
-			if ((int)current->content_size == fd)
-				return(current);
-			current = current->next;
-		}
-		ft_lstadd(bufd, ft_lstnew(NULL, 0));
-		(*bufd)->content_size = fd;
-		return (*bufd);
+		if ((int)current->content_size == fd)
+			return(current);
+		current = current->next;
 	}
-	return (NULL);
+	ft_lstadd(bufd, ft_lstnew("", fd));
+	return (*bufd);
 }
 
 int		get_next_line(const int fd, char **line)
@@ -59,45 +59,40 @@ int		get_next_line(const int fd, char **line)
 	char			*tmp;
 	
 	current = bufind(&bufd, fd);
-	tmp = NULL;
-	if (fd < 0)
+	if (fd < 0 || line == NULL || (!(tmp = ft_strnew(0))))
 		return (-1);
-	if (tmp == NULL)
-		tmp = ft_strnew(0);
-	while (!ft_strchr(current->content, '\n'))
+	while ((ret = read(fd, buf, BUFF_SIZE)) && ret)
 	{
-		ret = read(fd, buf, BUFF_SIZE);
 		if (ret < 0)
 			return (-1);
-		if (ret == 0)
-			break ;
-		*line[ret] = '\0';
+		buf[ret] = '\0';
 		tmp = ft_strjoin(current->content, buf);
-		ft_strdel((char**)&current->content);
+		ft_strclr(current->content);
 		current->content = tmp;
+		if (ft_strchr(current->content, '\n'))
+			break ;
 	}
-	return(linefill(line, current->content));
+	return(linefill(line, (char**)&current->content));
 }
 
-void    ft_read_input(int fd)
-{
-    char    *line;
-    int        r;
-    
-    while ((r = get_next_line(fd, &line)) > 0)
-        printf("return value = %d line content : |%s|\n\n", r, line);
-    printf("return value = %d line content : |%s|\n\n", r, line);
-}
-
+/*
 int			main(int ac, char **av)
 {
+	int		fd;
+	char	*line;
+
+	if (ac == 1)
+		fd = 0;
 	if (ac == 2)
-	{
 		fd = open(av[1], O_RDONLY);
-		ft_read_input(fd);
-		close(fd);
+	else return (2);
+	while	(get_next_line(fd, &line) == 1)
+	{
+		ft_putendl(line);
+		free(line);
 	}
-	else
-		ft_read_input(0);
+	if (ac == 2)
+		close (fd);
 	return(0);
 }
+*/
