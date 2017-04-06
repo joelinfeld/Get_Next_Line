@@ -15,24 +15,28 @@
 
 int		linefill(char **line, char **save)
 {
-	char	*end;
+	char *end;
 
-	end = ft_strchr(*save, '\n');
-	if (end != NULL)
+	if(ft_strlen(*save))
 	{
-		*end = '\0';
-		end++;
+		end = ft_strchr(*save, '\n');
 		*line = ft_strnew(ft_strlen(*save));
-		ft_memmove(*line, *save, ft_strlen(*save));
-		*save = end;
-		return(1);
+		if (end != NULL)
+		{
+			*end = '\0';
+			ft_memmove(*line, *save, ft_strlen(*save));
+			ft_strclr(*save);
+			*save = ++end;
+			return(1);
+		}
+		else
+		{
+			ft_memmove(*line, *save, ft_strlen(*save));
+			ft_strclr(*save);
+			return (1);	
+		}
 	}
-	*line = ft_strnew(ft_strlen(*save));
-	ft_memmove(*line, *save, ft_strlen(*save));
-	if (!ft_strlen(*line))
-		return(0);
-	else
-		return(1);
+	return (0);
 }
 
 t_list	*bufind(t_list **bufd, int fd)
@@ -58,10 +62,10 @@ int		get_next_line(const int fd, char **line)
 	int				ret;
 	char			*tmp;
 	
-	current = bufind(&bufd, fd);
-	if (fd < 0 || line == NULL || (!(tmp = ft_strnew(0))))
+	if (fd < 0 || !line || (!(tmp = ft_strnew(0))))
 		return (-1);
-	while ((ret = read(fd, buf, BUFF_SIZE)) && ret)
+	current = bufind(&bufd, fd);
+	while ((ret = read(fd, buf, BUFF_SIZE)))
 	{
 		if (ret < 0)
 			return (-1);
@@ -72,6 +76,7 @@ int		get_next_line(const int fd, char **line)
 		if (ft_strchr(current->content, '\n'))
 			break ;
 	}
+	ft_strdel(&tmp);
 	return(linefill(line, (char**)&current->content));
 }
 
