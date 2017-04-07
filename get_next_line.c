@@ -20,10 +20,10 @@ int		linefill(char **line, char **save)
 	if(ft_strlen(*save))
 	{
 		end = ft_strchr(*save, '\n');
-		*line = ft_strnew(ft_strlen(*save));
 		if (end != NULL)
 		{
 			*end = '\0';
+			*line = ft_strnew(ft_strlen(*save));
 			ft_memmove(*line, *save, ft_strlen(*save));
 			ft_strclr(*save);
 			*save = ++end;
@@ -31,6 +31,7 @@ int		linefill(char **line, char **save)
 		}
 		else
 		{
+			*line = ft_strnew(ft_strlen(*save));
 			ft_memmove(*line, *save, ft_strlen(*save));
 			ft_strclr(*save);
 			return (1);	
@@ -76,7 +77,6 @@ int		get_next_line(const int fd, char **line)
 		if (ft_strchr(current->content, '\n'))
 			break ;
 	}
-	ft_strdel(&tmp);
 	return(linefill(line, (char**)&current->content));
 }
 
