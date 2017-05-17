@@ -6,7 +6,7 @@
 /*   By: jinfeld <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/07 14:41:04 by jinfeld           #+#    #+#             */
-/*   Updated: 2017/05/16 16:26:17 by jinfeld          ###   ########.fr       */
+/*   Updated: 2017/05/16 17:14:38 by jinfeld          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,12 @@ int		get_next_line(const int fd, char **line)
 	char			*buf;
 	char			*tmp;
 	int				ret;
-	
+
 	if (!(buf = ft_strnew(BUFF_SIZE)))
 		return (-1);
 	if (fd < 0 || !line || BUFF_SIZE < 0)
 		return (-1);
 	bufind(&bufd, &current, fd);
-	*line = NULL;
 	while ((ret = read(fd, buf, BUFF_SIZE)))
 	{
 		if (ret < 0)
@@ -78,9 +77,9 @@ int		get_next_line(const int fd, char **line)
 		ft_strdel((char**)&current->content);
 		current->content = ft_strdup(tmp);
 		ft_strdel(&tmp);
-		ft_strclr(buf);
 		if (ft_strchr(current->content, '\n'))
 			break ;
 	}
+	ft_strdel(&buf);
 	return (linefill(line, (char**)&current->content));
 }
