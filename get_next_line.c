@@ -6,13 +6,13 @@
 /*   By: jinfeld <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/07 14:41:04 by jinfeld           #+#    #+#             */
-/*   Updated: 2017/08/23 18:25:43 by jinfeld          ###   ########.fr       */
+/*   Updated: 2017/09/05 10:54:42 by jinfeld          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		linefill(char **line, char **save)
+static int	linefill(char **line, char **save)
 {
 	char *end;
 	char *tmp;
@@ -40,7 +40,7 @@ int		linefill(char **line, char **save)
 	return (0);
 }
 
-void	bufind(t_list **bufd, t_list **current, int fd)
+static void	bufind(t_list **bufd, t_list **current, int fd)
 {
 	*current = *bufd;
 	while (*current)
@@ -55,7 +55,7 @@ void	bufind(t_list **bufd, t_list **current, int fd)
 	*current = *bufd;
 }
 
-int		get_next_line(const int fd, char **line)
+int			get_next_line(const int fd, char **line)
 {
 	static t_list	*bufd;
 	t_list			*current;
